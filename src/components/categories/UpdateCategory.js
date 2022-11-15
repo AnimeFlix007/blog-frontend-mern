@@ -1,27 +1,45 @@
 import { Button, Input } from "@mui/material";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import Img from "../../images/updateCategory.jfif";
 import addCaregorySchema from "../../utils/schema/addCategorySchema";
 import "../../css/addCategory.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createCategory } from "../../context/slice/category/CategorySlice";
+import {
+  getCategory,
+  updateCategory,
+} from "../../context/slice/category/CategorySlice";
+import { useNavigate, useParams } from "react-router-dom";
 
 const UpdateCategory = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading } = useSelector((store) => store.category);
+  const { loading, error, category } = useSelector((store) => store.category);
   const { handleSubmit, handleBlur, handleChange, errors, values, touched } =
     useFormik({
+      enableReinitialize: true,
       initialValues: {
-        title: "",
+        title: category.title,
       },
       validationSchema: addCaregorySchema,
       onSubmit: (values, action) => {
         console.log("submitted");
-        dispatch(createCategory(values));
+        dispatch(updateCategory({ id, title: values.title }));
         action.resetForm();
       },
     });
+
+  useEffect(() => {
+    dispatch(getCategory(id));
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (error.type === "error") {
+      navigate("/category-list");
+    }
+  }, [error, navigate]);
+
   return (
     <section>
       <div>

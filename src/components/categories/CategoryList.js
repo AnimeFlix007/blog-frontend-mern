@@ -8,10 +8,13 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCategories } from "../../context/slice/category/CategorySlice";
+import {
+  deleteCategory,
+  getAllCategories,
+} from "../../context/slice/category/CategorySlice";
 import DateFormater from "../../utils/DateFormater";
 import Loader from "../shared/Loader";
-import {AiFillEdit, AiFillDelete} from "react-icons/ai"
+import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 const CategoryList = () => {
@@ -27,11 +30,16 @@ const CategoryList = () => {
     },
   };
 
-  const navigate = useNavigate()
+  const deleteCategoryHandler = async (id) => {
+    await dispatch(deleteCategory(id))
+    await dispatch(getAllCategories())
+  }
+
+  const navigate = useNavigate();
 
   const navigateHandler = (id) => {
-    navigate(`/edit-category/${id}`)
-  }
+    navigate(`/edit-category/${id}`);
+  };
 
   return (
     <div>
@@ -56,15 +64,25 @@ const CategoryList = () => {
                   sx={boxSX}
                   style={{ cursor: "pointer" }}
                 >
-                  <TableCell component="th" scope="row">{category.user.firstName}</TableCell>
-                  <TableCell align="right">
-                    {category.title}
+                  <TableCell component="th" scope="row">
+                    {category.user.firstName}
                   </TableCell>
+                  <TableCell align="right">{category.title}</TableCell>
                   <TableCell align="right">
                     <DateFormater>{category.createdAt}</DateFormater>
                   </TableCell>
-                  <TableCell onClick={()=>navigateHandler(category._id)} align="right"><AiFillEdit /></TableCell>
-                  <TableCell align="right"><AiFillDelete /></TableCell>
+                  <TableCell
+                    onClick={() => navigateHandler(category._id)}
+                    align="right"
+                  >
+                    <AiFillEdit />
+                  </TableCell>
+                  <TableCell
+                    onClick={() => deleteCategoryHandler(category._id)}
+                    align="right"
+                  >
+                    <AiFillDelete />
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

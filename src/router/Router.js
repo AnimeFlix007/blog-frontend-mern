@@ -11,7 +11,6 @@ import UpdateCategory from "../components/categories/UpdateCategory";
 
 const Router = () => {
   const { user } = useSelector((store) => store.users);
-  console.log(user);
   return (
     <Routes>
       <Route

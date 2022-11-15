@@ -18,7 +18,6 @@ export const createCategory = createAsyncThunk(
         category,
         config
       );
-      console.log("res,res", res);
       return res.data;
     } catch (error) {
       if (!error && !error?.response) {
@@ -59,7 +58,7 @@ export const getAllCategories = createAsyncThunk(
 
 export const updateCategory = createAsyncThunk(
   "category/update",
-  async (id, { rejectWithValue, getState }) => {
+  async (category, { rejectWithValue, getState }) => {
     const token = getState()?.users?.user?.token;
     const config = {
       headers: {
@@ -68,8 +67,12 @@ export const updateCategory = createAsyncThunk(
       },
     };
     try {
-      const res = await axios.put(`http://localhost:5000/api/category/${id}`, config)
-      return res.data
+      const res = await axios.put(
+        `http://localhost:5000/api/category/${category.id}`,
+        { title: category.title },
+        config
+      );
+      return res.data;
     } catch (error) {
       if (!error && !error?.response) {
         throw error;
@@ -90,8 +93,11 @@ export const deleteCategory = createAsyncThunk(
       },
     };
     try {
-      const res = await axios.delete(`http://localhost:5000/api/category/${id}`, config)
-      return res.data
+      const res = await axios.delete(
+        `http://localhost:5000/api/category/${id}`,
+        config
+      );
+      return res.data;
     } catch (error) {
       if (!error && !error?.response) {
         throw error;
@@ -112,8 +118,11 @@ export const getCategory = createAsyncThunk(
       },
     };
     try {
-      const res = await axios.get(`http://localhost:5000/api/category/${id}`, config)
-      return res.data
+      const res = await axios.get(
+        `http://localhost:5000/api/category/${id}`,
+        config
+      );
+      return res.data;
     } catch (error) {
       if (!error && !error?.response) {
         throw error;
