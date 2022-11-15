@@ -26,6 +26,7 @@ const UpdateCategory = () => {
       onSubmit: (values, action) => {
         console.log("submitted");
         dispatch(updateCategory({ id, title: values.title }));
+        navigate("/category-list")
         action.resetForm();
       },
     });
