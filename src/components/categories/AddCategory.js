@@ -6,9 +6,11 @@ import addCaregorySchema from "../../utils/schema/addCategorySchema";
 import "../../css/addCategory.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategory } from "../../context/slice/category/CategorySlice";
+import { useNavigate } from "react-router-dom";
 
 const AddCategory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading } = useSelector((store) => store.category);
   const { handleSubmit, handleBlur, handleChange, errors, values, touched } =
     useFormik({
@@ -16,10 +18,11 @@ const AddCategory = () => {
         title: "",
       },
       validationSchema: addCaregorySchema,
-      onSubmit: (values, action) => {
+      onSubmit: async (values, action) => {
         console.log("submitted");
-        dispatch(createCategory(values));
+        await dispatch(createCategory(values));
         action.resetForm();
+        navigate("/category-list")
       },
     });
   return (

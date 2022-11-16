@@ -14,7 +14,7 @@ const HomePage = () => {
         {!user ? (
           <button onClick={() => navigate("/login")}>Login Now</button>
         ) : (
-          <button onClick={() => navigate("/create")}>Create Blog</button>
+          <button onClick={() => navigate("/create-post")}>Create Blog</button>
         )}
       </div>
       <div className="homepage__right">
