@@ -5,27 +5,31 @@ import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { UploadPost } from "../../context/slice/post/postSlice";
 import { useNavigate } from "react-router-dom";
+import DropdownCategory from "./DropdownCategory";
 
 const initialValues = {
   title: "",
   description: "",
+  category: "",
 };
 
 const CreatePost = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { post, loading } = useSelector((store) => store.posts);
-  const { values, errors, touched, handleBlur, handleSubmit, handleChange } =
+  const { values, errors, touched, handleBlur, handleSubmit, handleChange, setFieldValue, setFieldTouched } =
     useFormik({
       initialValues,
       validationSchema: createPostSchema,
       onSubmit: async (values, action) => {
         console.log("submitted", values);
-        await dispatch(UploadPost(values));
+        const data = { ...values, category: values.category.label }
+        await dispatch(UploadPost(data));
         navigate("/");
-        action.resetForm();
+        // action.resetForm();
       },
     });
+    console.log(values, "sfafvAsfsfgzs");
   return (
     <section>
       <div className="image"></div>
@@ -44,6 +48,13 @@ const CreatePost = () => {
             <p className="form-error">{errors.title}</p>
           ) : null}
         </div>
+        <DropdownCategory
+          onBlur={setFieldTouched}
+          onChange={setFieldValue}
+          value={values.category?.label}
+          error={errors.category}
+          touched={touched.category}
+        />
         <div className="form-field">
           <label htmlFor="title">Description</label>
           <textarea
