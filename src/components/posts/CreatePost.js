@@ -6,30 +6,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { UploadPost } from "../../context/slice/post/postSlice";
 import { useNavigate } from "react-router-dom";
 import DropdownCategory from "./DropdownCategory";
+import PreviewImage from "../../utils/preview/ImagePreview";
 
 const initialValues = {
   title: "",
   description: "",
   category: "",
+  image: '',
 };
 
 const CreatePost = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { post, loading } = useSelector((store) => store.posts);
-  const { values, errors, touched, handleBlur, handleSubmit, handleChange, setFieldValue, setFieldTouched } =
-    useFormik({
-      initialValues,
-      validationSchema: createPostSchema,
-      onSubmit: async (values, action) => {
-        console.log("submitted", values);
-        const data = { ...values, category: values.category.label }
-        await dispatch(UploadPost(data));
-        navigate("/");
-        // action.resetForm();
-      },
-    });
-    console.log(values, "sfafvAsfsfgzs");
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleSubmit,
+    handleChange,
+    setFieldValue,
+    setFieldTouched,
+  } = useFormik({
+    initialValues,
+    validationSchema: createPostSchema,
+    onSubmit: async (values, action) => {
+      console.log("submitted", values);
+      const data = { ...values, category: values.category.label };
+      await dispatch(UploadPost(data));
+      // navigate("/");
+      // action.resetForm();
+    },
+  });
+  console.log(values.image, "sfafvAsfsfgzs");
   return (
     <section>
       <div className="image"></div>
@@ -71,6 +81,19 @@ const CreatePost = () => {
             <p className="form-error">{errors.description}</p>
           ) : null}
         </div>
+        <div className="form-field">
+          {values.image && <PreviewImage file={values.image} />}
+          <label htmlFor="title">Upload Image</label>
+          <input
+            type="file"
+            name="image"
+            onChange={(e) => setFieldValue("image", e.target.files[0])}
+          />
+          {errors.image  ? (
+            <p className="form-error">{errors.image}</p>
+          ) : null}
+        </div>
+
         <div className="btn">
           <Button type="submit" variant="contained">
             Submit

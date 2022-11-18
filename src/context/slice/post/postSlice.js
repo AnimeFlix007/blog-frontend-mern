@@ -8,16 +8,24 @@ export const UploadPost = createAsyncThunk(
     console.log(token, "token");
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     };
+    console.log(post);
     try {
+      const formData = new FormData();
+      formData.append("title", post?.title);
+      formData.append("description", post?.description);
+      formData.append("category", post?.category);
+      formData.append("image", post?.image);
+      console.log(formData);
       const res = await axios.post(
         "http://localhost:5000/api/posts/",
         post,
         config
       );
+      console.log(res.data);
       return res.data;
     } catch (error) {
       if (!error && !error?.response) {
@@ -51,23 +59,23 @@ const PostSlice = createSlice({
   },
   extraReducers: {
     [UploadPost.pending]: (state, action) => {
-        state.loading = true
+      state.loading = true;
     },
     [UploadPost.fulfilled]: (state, action) => {
-        state.loading = false
-        state.post = action.payload.post
-        state.error.message = action.payload.message
-        state.error.open = true
+      state.loading = false;
+      state.post = action.payload.post;
+      state.error.message = action.payload.message;
+      state.error.open = true;
     },
     [UploadPost.rejected]: (state, action) => {
-        state.loading = false
-        state.error.message = action.payload.message
-        state.error.open = true
-        state.error.type = 'error'
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
     },
   },
 });
 
-export const { removeAlert } = PostSlice.actions
+export const { removeAlert } = PostSlice.actions;
 
 export default PostSlice.reducer;
