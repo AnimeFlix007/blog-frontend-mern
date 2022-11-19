@@ -1,10 +1,12 @@
 import {
+  Avatar,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +18,7 @@ import DateFormater from "../../utils/DateFormater";
 import Loader from "../shared/Loader";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { Container } from "@mui/system";
 
 const CategoryList = () => {
   const dispatch = useDispatch();
@@ -31,9 +34,9 @@ const CategoryList = () => {
   };
 
   const deleteCategoryHandler = async (id) => {
-    await dispatch(deleteCategory(id))
-    await dispatch(getAllCategories())
-  }
+    await dispatch(deleteCategory(id));
+    await dispatch(getAllCategories());
+  };
 
   const navigate = useNavigate();
 
@@ -65,7 +68,10 @@ const CategoryList = () => {
                   style={{ cursor: "pointer" }}
                 >
                   <TableCell component="th" scope="row">
-                    {category.user.firstName}
+                    <Container style={{display: "flex", alignItems: "center", gap: "1rem"}}>
+                      <Avatar style={{width: "40px"}} src={category?.user?.profilePhoto} />
+                      <Typography>{category.user.firstName}</Typography>
+                    </Container>
                   </TableCell>
                   <TableCell align="right">{category.title}</TableCell>
                   <TableCell align="right">

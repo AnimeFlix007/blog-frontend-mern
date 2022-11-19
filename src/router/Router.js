@@ -8,6 +8,7 @@ import Register from "../pages/auth/Register";
 import CategoryList from "../components/categories/CategoryList";
 import CreatePost from "../components/posts/CreatePost";
 import UpdateCategory from "../components/categories/UpdateCategory";
+import AllPosts from "../components/posts/AllPosts";
 
 const Router = () => {
   const { user } = useSelector((store) => store.users);
@@ -16,6 +17,10 @@ const Router = () => {
       <Route
         path="/"
         element={<HomePage />}
+      />
+      <Route
+        path="/posts"
+        element={<AllPosts />}
       />
       <Route
         path="/login"

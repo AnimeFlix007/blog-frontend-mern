@@ -36,6 +36,26 @@ export const UploadPost = createAsyncThunk(
   }
 );
 
+export const FetchAllPosts = createAsyncThunk(
+  "posts/all",
+  async (category, { rejectWithValue, getState }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const res = await axios.get(`http://localhost:5000/api/posts?category=${category}`, config)
+      return res.data
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialError = {
   open: false,
   message: "",
@@ -68,6 +88,19 @@ const PostSlice = createSlice({
       state.error.open = true;
     },
     [UploadPost.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
+    },
+    [FetchAllPosts.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [FetchAllPosts.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.posts = action.payload.posts;
+    },
+    [FetchAllPosts.rejected]: (state, action) => {
       state.loading = false;
       state.error.message = action.payload.message;
       state.error.open = true;

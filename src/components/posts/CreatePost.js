@@ -12,13 +12,13 @@ const initialValues = {
   title: "",
   description: "",
   category: "",
-  image: '',
+  image: "",
 };
 
 const CreatePost = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { post, loading } = useSelector((store) => store.posts);
+  const { loading } = useSelector((store) => store.posts);
   const {
     values,
     errors,
@@ -35,8 +35,8 @@ const CreatePost = () => {
       console.log("submitted", values);
       const data = { ...values, category: values.category.label };
       await dispatch(UploadPost(data));
-      // navigate("/");
-      // action.resetForm();
+      navigate("/");
+      action.resetForm();
     },
   });
   console.log(values.image, "sfafvAsfsfgzs");
@@ -89,15 +89,19 @@ const CreatePost = () => {
             name="image"
             onChange={(e) => setFieldValue("image", e.target.files[0])}
           />
-          {errors.image  ? (
-            <p className="form-error">{errors.image}</p>
-          ) : null}
+          {errors.image ? <p className="form-error">{errors.image}</p> : null}
         </div>
 
         <div className="btn">
-          <Button type="submit" variant="contained">
-            Submit
-          </Button>
+          {!loading ? (
+            <Button type="submit" variant="contained">
+              Submit
+            </Button>
+          ) : (
+            <Button disabled variant="contained">
+              Loading
+            </Button>
+          )}
         </div>
       </form>
     </section>
