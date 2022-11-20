@@ -9,6 +9,7 @@ import CategoryList from "../components/categories/CategoryList";
 import CreatePost from "../components/posts/CreatePost";
 import UpdateCategory from "../components/categories/UpdateCategory";
 import AllPosts from "../components/posts/AllPosts";
+import SinglePostDetail from "../components/posts/SinglePostDetail";
 
 const Router = () => {
   const { user } = useSelector((store) => store.users);
@@ -20,7 +21,11 @@ const Router = () => {
       />
       <Route
         path="/posts"
-        element={<AllPosts />}
+        element={user ? <AllPosts /> : <Navigate to={"/login"} replace />}
+      />
+      <Route
+        path="/posts/:id"
+        element={user ? <SinglePostDetail /> : <Navigate to={"/login"} replace />}
       />
       <Route
         path="/login"

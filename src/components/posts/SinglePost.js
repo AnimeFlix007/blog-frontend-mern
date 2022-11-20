@@ -8,11 +8,20 @@ import {
 } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
 import "../../css/singlePost.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postDisLikes, postLikes } from "../../context/slice/post/postSlice";
 
 const SinglePost = ({ post }) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.users);
+  const isLiked = post.likes.find((p) => {
+    return p.id.toString() === user.user.id.toString()
+  });
+  const isDisLiked = post.DisLikes.find((p) => {
+    return p.id.toString() === user.user.id.toString()
+  });
+
+  // console.log(isLiked, isDisLiked);
   const postLikeHandler = async (id) => {
     await dispatch(postLikes(id));
   };
@@ -33,11 +42,20 @@ const SinglePost = ({ post }) => {
       </div>
       <div className="features">
         <div className="icons like">
-          <AiOutlineLike onClick={() => postLikeHandler(post._id)} />
+          {isLiked ? (
+            <AiFillLike onClick={() => postLikeHandler(post._id)} />
+          ) : (
+            <AiOutlineLike onClick={() => postLikeHandler(post._id)} />
+          )}
+
           {post.likes.length}
         </div>
         <div className="icons dislike">
-          <AiOutlineDislike onClick={() => postDisLikeHandler(post._id)} />
+          {isDisLiked ? (
+            <AiFillDislike onClick={() => postDisLikeHandler(post._id)} />
+          ) : (
+            <AiOutlineDislike onClick={() => postDisLikeHandler(post._id)} />
+          )}
           {post.DisLikes.length}
         </div>
         <div className="icons views">

@@ -39,9 +39,12 @@ export const UploadPost = createAsyncThunk(
 export const FetchAllPosts = createAsyncThunk(
   "posts/all",
   async (category, { rejectWithValue, getState }) => {
+    const token = getState()?.users.user.token;
+    console.log(token, "token");
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     };
     try {

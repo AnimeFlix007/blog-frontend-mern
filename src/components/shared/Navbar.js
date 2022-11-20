@@ -27,9 +27,9 @@ const Navbar = () => {
             <Link to="/create-post">create-post</Link>
           </li>
         )}
-        <li>
+        {user && <li>
           <Link to="/posts">Posts</Link>
-        </li>
+        </li>}
         {!user && (
           <li>
             <Link to="/register">register</Link>
