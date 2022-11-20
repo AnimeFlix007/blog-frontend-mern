@@ -45,8 +45,63 @@ export const FetchAllPosts = createAsyncThunk(
       },
     };
     try {
-      const res = await axios.get(`http://localhost:5000/api/posts?category=${category}`, config)
-      return res.data
+      const res = await axios.get(
+        `http://localhost:5000/api/posts?category=${category}`,
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const postLikes = createAsyncThunk(
+  "post/like",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    const token = getState()?.users.user.token;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/posts/likes",
+        { id: postId },
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const postDisLikes = createAsyncThunk(
+  "post/like",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    const token = getState()?.users.user.token;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/posts/dislikes",
+        { id: postId },
+        config
+      );
+      return res.data;
     } catch (error) {
       if (!error && !error?.response) {
         throw error;
@@ -101,6 +156,36 @@ const PostSlice = createSlice({
       state.posts = action.payload.posts;
     },
     [FetchAllPosts.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
+    },
+    [postLikes.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [postLikes.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.post = action.payload.post;
+      state.error.open = true;
+    },
+    [postLikes.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
+    },
+    [postDisLikes.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [postDisLikes.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.post = action.payload.post;
+      state.error.open = true;
+    },
+    [postDisLikes.rejected]: (state, action) => {
       state.loading = false;
       state.error.message = action.payload.message;
       state.error.open = true;

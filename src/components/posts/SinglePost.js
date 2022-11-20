@@ -8,8 +8,17 @@ import {
 } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
 import "../../css/singlePost.css";
+import { useDispatch } from "react-redux";
+import { postDisLikes, postLikes } from "../../context/slice/post/postSlice";
 
 const SinglePost = ({ post }) => {
+  const dispatch = useDispatch();
+  const postLikeHandler = async (id) => {
+    await dispatch(postLikes(id));
+  };
+  const postDisLikeHandler = async (id) => {
+    await dispatch(postDisLikes(id));
+  };
   return (
     <div className="post">
       <div className="top">
@@ -24,13 +33,16 @@ const SinglePost = ({ post }) => {
       </div>
       <div className="features">
         <div className="icons like">
-          <AiOutlineLike />
+          <AiOutlineLike onClick={() => postLikeHandler(post._id)} />
+          {post.likes.length}
         </div>
         <div className="icons dislike">
-          <AiOutlineDislike />
+          <AiOutlineDislike onClick={() => postDisLikeHandler(post._id)} />
+          {post.DisLikes.length}
         </div>
         <div className="icons views">
           <GrView />
+          {post.numViews}
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import SinglePost from "./SinglePost";
 
 const AllPosts = () => {
   const [category, setcategory] = useState("");
-  const { posts, loading } = useSelector((store) => store.posts);
+  const { posts, loading, post } = useSelector((store) => store.posts);
   const { categories, loading: categoriesLoading } = useSelector(
     (store) => store.category
   );
@@ -18,15 +18,19 @@ const AllPosts = () => {
   useEffect(() => {
     dispatch(FetchAllPosts(category));
     dispatch(getAllCategories("get"));
-  }, [category, dispatch]);
+  }, [category, dispatch, post]);
+
   return (
     <section className="post__section">
       <div className="categories_container">
+        <button type="button" onClick={() => setcategory("")}>
+          Reset
+        </button>
         {!categoriesLoading && categories && (
           <div className="categories">
             {categories.map((category) => {
               return (
-                <h3 onClick={() => categoryHandler(category.title)}>
+                <h3 key={category._id} onClick={() => categoryHandler(category.title)}>
                   {category.title}
                 </h3>
               );
@@ -39,7 +43,7 @@ const AllPosts = () => {
       {!loading && posts && (
         <div className="posts">
           {posts.map((post) => {
-            return <SinglePost post={post} />;
+            return <SinglePost key={post._id} post={post} />;
           })}
         </div>
       )}
