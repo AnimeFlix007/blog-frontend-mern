@@ -114,6 +114,31 @@ export const postDisLikes = createAsyncThunk(
   }
 );
 
+export const fetchSinglePostDetail = createAsyncThunk(
+  "posts/details",
+  async (postId, { rejectWithValue, getState, dispatch }) => {
+    const token = getState()?.users?.user.token;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/posts/${postId}`,
+        config
+      );
+      return response.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialError = {
   open: false,
   message: "",
@@ -123,6 +148,7 @@ const initialError = {
 const initialState = {
   loading: false,
   post: {},
+  postDetail: {},
   posts: [],
   error: initialError,
 };
@@ -194,6 +220,19 @@ const PostSlice = createSlice({
       state.error.open = true;
       state.error.type = "error";
     },
+    [fetchSinglePostDetail.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [fetchSinglePostDetail.fulfilled]: (state, action) => {
+     state.loading = false
+     state.postDetail = action.payload.post  
+    },
+    [fetchSinglePostDetail.rejected]: (state, action) => {
+      state.loading = false
+      state.error.message = action.payload.message
+      state.error.open = true
+      state.error.type = "error"
+    }
   },
 });
 

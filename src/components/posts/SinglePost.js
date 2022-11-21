@@ -10,6 +10,7 @@ import { GrView } from "react-icons/gr";
 import "../../css/singlePost.css";
 import { useDispatch, useSelector } from "react-redux";
 import { postDisLikes, postLikes } from "../../context/slice/post/postSlice";
+import { Link } from "react-router-dom";
 
 const SinglePost = ({ post }) => {
   const dispatch = useDispatch();
@@ -61,6 +62,9 @@ const SinglePost = ({ post }) => {
         <div className="icons views">
           <GrView />
           {post.numViews}
+        </div>
+        <div className="details">
+          <Link to={`/posts/${post._id}`}>View details</Link>
         </div>
       </div>
     </div>
