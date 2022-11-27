@@ -27,10 +27,10 @@ const Register = () => {
     useFormik({
       initialValues,
       validationSchema: signUpSchema,
-      onSubmit: ({ confirm_password, ...values }, action) => {
+      onSubmit: async({ confirm_password, ...values }, action) => {
         console.log('submitted');
-        dispatch(registerUserAction(values));
         setNavi(true)
+        await dispatch(registerUserAction(values));
         action.resetForm();
       },
     });
