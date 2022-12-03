@@ -18,7 +18,6 @@ import {
   AiFillDelete,
 } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
-import Loader from "../shared/Loader";
 
 const SinglePostDetail = () => {
   const { id } = useParams();
@@ -26,7 +25,6 @@ const SinglePostDetail = () => {
   const navigate = useNavigate()
   const { postDetail } = useSelector((store) => store.posts);
   const { user } = useSelector((store) => store.users);
-  const validId = postDetail.id === id
   const [x, setX] = useState(false)
   const isLiked = postDetail.likes?.find((p) => {
     return p.id.toString() === user.user.id.toString()
