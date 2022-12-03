@@ -10,6 +10,7 @@ import CreatePost from "../components/posts/CreatePost";
 import UpdateCategory from "../components/categories/UpdateCategory";
 import AllPosts from "../components/posts/AllPosts";
 import SinglePostDetail from "../components/posts/SinglePostDetail";
+import UpdatePost from "../components/posts/UpdatePost";
 
 const Router = () => {
   const { user } = useSelector((store) => store.users);
@@ -38,6 +39,10 @@ const Router = () => {
       <Route
         path="/create-post"
         element={user ? <CreatePost /> : <Navigate to={"/"} replace />}
+      />
+      <Route
+        path="/edit-post/:id"
+        element={user ? <UpdatePost /> : <Navigate to={"/"} replace />}
       />
       <Route
         path="/add-category"

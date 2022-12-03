@@ -12,7 +12,7 @@ export const UploadPost = createAsyncThunk(
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(post);
+    // console.log(post);
     try {
       const formData = new FormData();
       formData.append("title", post?.title);
@@ -139,6 +139,58 @@ export const fetchSinglePostDetail = createAsyncThunk(
   }
 );
 
+export const deletePost = createAsyncThunk(
+  "post/delete",
+  async (postId, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users.user.token;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      console.log(token);
+      const res = await axios.delete(
+        `http://localhost:5000/api/posts/${postId}`,
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const Update_Post = createAsyncThunk(
+  "post/update",
+  async (post, { rejectWithValue, getState }) => {
+    try {
+      const token = getState()?.users.user.token;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const res = await axios.put(
+        `http://localhost:5000/api/posts/${post.postId}`,
+        post,
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 const initialError = {
   open: false,
   message: "",
@@ -151,6 +203,7 @@ const initialState = {
   postDetail: {},
   posts: [],
   error: initialError,
+  updated: false
 };
 
 const PostSlice = createSlice({
@@ -224,15 +277,45 @@ const PostSlice = createSlice({
       state.loading = true;
     },
     [fetchSinglePostDetail.fulfilled]: (state, action) => {
-     state.loading = false
-     state.postDetail = action.payload.post  
+      state.loading = false;
+      state.postDetail = action.payload.post;
     },
     [fetchSinglePostDetail.rejected]: (state, action) => {
-      state.loading = false
-      state.error.message = action.payload.message
-      state.error.open = true
-      state.error.type = "error"
-    }
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
+      state.postDetail = 1;
+    },
+    [Update_Post.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [Update_Post.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.updated = true;
+    },
+    [Update_Post.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
+    },
+    [deletePost.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [deletePost.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+    },
+    [deletePost.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.message = action.payload.message;
+      state.error.open = true;
+      state.error.type = "error";
+    },
   },
 });
 
