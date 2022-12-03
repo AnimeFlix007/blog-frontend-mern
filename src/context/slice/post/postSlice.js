@@ -203,7 +203,8 @@ const initialState = {
   postDetail: {},
   posts: [],
   error: initialError,
-  updated: false
+  updated: false,
+  isNotValid: false
 };
 
 const PostSlice = createSlice({
@@ -275,6 +276,7 @@ const PostSlice = createSlice({
     },
     [fetchSinglePostDetail.pending]: (state, action) => {
       state.loading = true;
+      state.isNotValid = false;
     },
     [fetchSinglePostDetail.fulfilled]: (state, action) => {
       state.loading = false;
@@ -286,6 +288,7 @@ const PostSlice = createSlice({
       state.error.open = true;
       state.error.type = "error";
       state.postDetail = 1;
+      state.isNotValid = true;
     },
     [Update_Post.pending]: (state, action) => {
       state.loading = true;
