@@ -18,6 +18,7 @@ import {
   AiFillDelete,
 } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
+import AddComment from "../comments/AddComment";
 
 const SinglePostDetail = () => {
   const { id } = useParams();
@@ -41,7 +42,7 @@ const SinglePostDetail = () => {
   useEffect(() => {
     dispatch(fetchSinglePostDetail(id));
   }, [id, x]);
-  
+
   useEffect(() => {
     if (isNotValid) {
       navigate("/posts");
@@ -60,7 +61,6 @@ const SinglePostDetail = () => {
 
   return (
     <section className="post__detail-container">
-      <>
         <div className="image-container">
           <img src={postDetail?.image} alt="alpha" />
         </div>
@@ -102,18 +102,22 @@ const SinglePostDetail = () => {
               <Link to={`/posts`}>Back To All Posts</Link>
             </div>
           </div>
-          <div className="editPost">
-            <div className="edit-post-icon">
-              <AiFillEdit
-                onClick={() => navigate(`/edit-post/${postDetail._id}`)}
-              />
+          {user.user.id.toString() === postDetail?.user?.id?.toString() && (
+            <div className="editPost">
+              <div className="edit-post-icon">
+                <AiFillEdit
+                  onClick={() => navigate(`/edit-post/${postDetail._id}`)}
+                />
+              </div>
+              <div className="delete-post-icon">
+                <AiFillDelete
+                  onClick={() => deletePostHandler(postDetail._id)}
+                />
+              </div>
             </div>
-            <div className="delete-post-icon">
-              <AiFillDelete onClick={() => deletePostHandler(postDetail._id)} />
-            </div>
-          </div>
+          )}
         </div>
-      </>
+        <AddComment postId={postDetail.id} userId={user.user.id} />
     </section>
   );
 };

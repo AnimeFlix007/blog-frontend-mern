@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Button, Input } from "@mui/material";
 import { useFormik } from "formik";
 import React, { useEffect } from "react";
@@ -18,6 +19,7 @@ const UpdatePost = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { postDetail, loading, updated } = useSelector((store) => store.posts);
+  const { user } = useSelector((store) => store.users);
   const {
     handleSubmit,
     handleBlur,
@@ -32,7 +34,7 @@ const UpdatePost = () => {
     initialValues: {
       title: postDetail.title,
       description: postDetail.description,
-      category: postDetail.category,
+      category: '',
     },
     validationSchema: updatePostSchema,
     onSubmit: (values, action) => {
@@ -44,19 +46,18 @@ const UpdatePost = () => {
           category: values.category.label,
         })
       );
+      navigate("/posts");
       action.resetForm();
     },
   });
 
   useEffect(() => {
-    dispatch(fetchSinglePostDetail(id));
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    if (updated) {
-      navigate("/posts");
+    if(user.user.id.toString() === postDetail?.user?.id?.toString()) {
+      dispatch(fetchSinglePostDetail(id));
+    } else {
+      navigate("/posts")
     }
-  }, [updated, navigate]);
+  }, [dispatch, id]);
 
   return (
     <section>
