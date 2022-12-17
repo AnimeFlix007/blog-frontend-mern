@@ -4,7 +4,6 @@ import MuiAlert from "@mui/material/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import { CategoryActions } from "../../context/slice/category/CategorySlice";
 
-
 const CategoryAlert = () => {
   const dispatch = useDispatch()
   const { open, message, type } = useSelector((store) => store.category.error);
@@ -16,7 +15,7 @@ const CategoryAlert = () => {
     dispatch(CategoryActions.removeAlert())
   };
   return (
-    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} >
       <MuiAlert
         onClose={handleClose}
         elevation={10}
