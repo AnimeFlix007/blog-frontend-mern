@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -19,6 +18,7 @@ import {
 } from "react-icons/ai";
 import { GrView } from "react-icons/gr";
 import AddComment from "../comments/AddComment";
+import AllComments from "../comments/AllComments";
 
 const SinglePostDetail = () => {
   const { id } = useParams();
@@ -41,7 +41,7 @@ const SinglePostDetail = () => {
 
   useEffect(() => {
     dispatch(fetchSinglePostDetail(id));
-  }, [id, x]);
+  }, [id, x, dispatch]);
 
   useEffect(() => {
     if (isNotValid) {
@@ -118,6 +118,7 @@ const SinglePostDetail = () => {
           )}
         </div>
         <AddComment postId={postDetail.id} userId={user.user.id} />
+        <AllComments />
     </section>
   );
 };

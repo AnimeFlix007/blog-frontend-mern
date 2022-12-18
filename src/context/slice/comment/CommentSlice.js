@@ -13,19 +13,44 @@ export const postComment = createAsyncThunk(
     };
     console.log(comment);
     try {
-        const res = await axios.post(
-          `http://localhost:5000/api/comments/`,
-          comment,
-          config
-        );
-        return res.data;
-      } catch (error) {
-        if (!error && !error?.response) {
-          throw error;
-        }
-        return rejectWithValue(error?.response?.data);
+      const res = await axios.post(
+        `http://localhost:5000/api/comments/`,
+        comment,
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
       }
+      return rejectWithValue(error?.response?.data);
     }
+  }
+);
+
+export const getAllComment = createAsyncThunk(
+  "comment/getAll",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    const token = getState()?.users?.user?.token;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/comments/`,
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
 );
 
 const initialError = {
@@ -38,7 +63,7 @@ const commentSlice = createSlice({
   name: "category",
   initialState: {
     loading: false,
-    comment: "",
+    comment: {},
     comments: [],
     error: initialError,
   },
@@ -49,19 +74,32 @@ const commentSlice = createSlice({
   },
   extraReducers: {
     [postComment.pending]: (state, action) => {
-        state.loading = true;
+      state.loading = true;
     },
     [postComment.fulfilled]: (state, action) => {
-        state.loading = false;
-        state.comment = action.payload.comment
-        state.error.message = action?.payload?.message;
-        state.error.open = true;
+      state.loading = false;
+      state.comment = action.payload.comment;
+      state.error.message = action?.payload?.message;
+      state.error.open = true;
     },
     [postComment.rejected]: (state, action) => {
-        state.loading = false;
-        state.error.message = action?.payload?.message;
-        state.error.open = true;
-        state.error.type = "error";
+      state.loading = false;
+      state.error.message = action?.payload?.message;
+      state.error.open = true;
+      state.error.type = "error";
+    },
+    [getAllComment.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [getAllComment.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.comments = action.payload.comments;
+    },
+    [getAllComment.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.message = action?.payload?.message;
+      state.error.open = true;
+      state.error.type = "error";
     },
   },
 });

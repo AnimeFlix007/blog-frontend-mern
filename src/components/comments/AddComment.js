@@ -1,13 +1,12 @@
 import { Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { postComment } from "../../context/slice/comment/CommentSlice";
 import addCommentSchema from "../../utils/schema/AddComment";
 
 const AddComment = ({ postId }) => {
   const dispatch = useDispatch();
-  const {} = useSelector((store) => store);
   const { handleSubmit, handleBlur, handleChange, errors, values, touched } =
     useFormik({
       initialValues: {
@@ -18,7 +17,6 @@ const AddComment = ({ postId }) => {
         console.log("submitted", values);
         const data = {
           postId: postId,
-          // user: userId,
           title: values.title,
         };
         dispatch(postComment(data));

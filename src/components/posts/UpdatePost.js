@@ -34,7 +34,7 @@ const UpdatePost = () => {
     initialValues: {
       title: postDetail.title,
       description: postDetail.description,
-      category: '',
+      category: postDetail.category?.label,
     },
     validationSchema: updatePostSchema,
     onSubmit: (values, action) => {
