@@ -1,21 +1,67 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllComment } from "../../context/slice/comment/CommentSlice";
+import { Avatar, Button } from "@mui/material";
+import { useState } from "react";
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 
-const AllComments = () => {
-  const { comments, comment } = useSelector((store) => store.comments);
+const AllComments = ({ postId }) => {
+  const [openEditCommentModal, setopenEditCommentModal] = useState(false);
+  const [opendeleteCommentModal, setopendeleteCommentModal] = useState(false);
+  const { postDetail } = useSelector((store) => store.posts);
   const dispatch = useDispatch();
+  const [commentid, setCommentId] = useState("");
+  const [commenttitle, setCommenttitle] = useState("");
 
-  useEffect(() => {
-    dispatch(getAllComment());
-  }, [dispatch, comment]);
+  useEffect(() => {}, []);
 
   return (
     <section>
-      <p>TOTAL COMMENTS : {comments.length}</p>
-      {comments.map((comment) => {
-        return <div className="singleComment">{comment.title}</div>;
+      <p>TOTAL COMMENTS : {postDetail?.comments?.length}</p>
+      {postDetail?.comments?.map((comment) => {
+        return (
+          <div key={comment?._id} className="singleComment">
+            <Avatar alt={comment?.user?.firstName} src={comment?.user?.profilePhoto} />
+            <p>{comment.title}</p>
+            <Button
+              onClick={() => {
+                setopenEditCommentModal((prev) => !prev);
+                setCommentId(comment?._id);
+                setCommenttitle(comment.title)
+              }}
+              variant="contained"
+              color="success"
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={() => {
+                setopendeleteCommentModal((prev) => !prev);
+                setCommentId(comment?._id);
+              }}
+              variant="contained"
+              color="error"
+            >
+              Delete
+            </Button>
+          </div>
+        );
       })}
+      {opendeleteCommentModal && (
+        <DeleteModal
+          setOpen={setopendeleteCommentModal}
+          open={opendeleteCommentModal}
+          id={commentid}
+        />
+      )}
+      {openEditCommentModal && (
+        <EditModal
+          setOpen={setopenEditCommentModal}
+          open={openEditCommentModal}
+          id={commentid}
+          commenttitle={commenttitle}
+        />
+      )}
     </section>
   );
 };

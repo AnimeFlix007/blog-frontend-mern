@@ -35,6 +35,7 @@ const AddComment = ({ postId }) => {
           value={values.title}
           onChange={handleChange}
           onBlur={handleBlur}
+          error={errors.title && touched.title}
         />
         {errors.title && touched.title ? (
           <p className="form-error">{errors.title}</p>

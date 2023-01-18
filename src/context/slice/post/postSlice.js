@@ -204,7 +204,9 @@ const initialState = {
   posts: [],
   error: initialError,
   updated: false,
-  isNotValid: false
+  isNotValid: false,
+  postLiked: false,
+  postdisLiiked: false,
 };
 
 const PostSlice = createSlice({
@@ -246,37 +248,42 @@ const PostSlice = createSlice({
     },
     [postLikes.pending]: (state, action) => {
       state.loading = true;
+      state.postLiked = false;
     },
     [postLikes.fulfilled]: (state, action) => {
       state.loading = false;
+      state.postLiked = true;
       state.error.message = action.payload.message;
       state.post = action.payload.post;
       state.error.open = true;
     },
     [postLikes.rejected]: (state, action) => {
       state.loading = false;
+      state.postLiked = false;
       state.error.message = action.payload.message;
       state.error.open = true;
       state.error.type = "error";
     },
     [postDisLikes.pending]: (state, action) => {
       state.loading = true;
+      state.postdisLiiked = false;
     },
     [postDisLikes.fulfilled]: (state, action) => {
       state.loading = false;
+      state.postdisLiiked = true;
       state.error.message = action.payload.message;
       state.post = action.payload.post;
       state.error.open = true;
     },
     [postDisLikes.rejected]: (state, action) => {
       state.loading = false;
+      state.postdisLiiked = false;
       state.error.message = action.payload.message;
       state.error.open = true;
       state.error.type = "error";
     },
     [fetchSinglePostDetail.pending]: (state, action) => {
       state.loading = true;
-      state.isNotValid = false;
     },
     [fetchSinglePostDetail.fulfilled]: (state, action) => {
       state.loading = false;
@@ -287,8 +294,6 @@ const PostSlice = createSlice({
       state.error.message = action.payload.message;
       state.error.open = true;
       state.error.type = "error";
-      state.postDetail = 1;
-      state.isNotValid = true;
     },
     [Update_Post.pending]: (state, action) => {
       state.loading = true;
