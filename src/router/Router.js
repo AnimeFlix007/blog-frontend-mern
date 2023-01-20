@@ -11,6 +11,7 @@ import UpdateCategory from "../components/categories/UpdateCategory";
 import AllPosts from "../components/posts/AllPosts";
 import SinglePostDetail from "../components/posts/SinglePostDetail";
 import UpdatePost from "../components/posts/UpdatePost";
+import Profile from "../components/users/Profile/Profile";
 
 const Router = () => {
   const { user } = useSelector((store) => store.users);
@@ -69,6 +70,16 @@ const Router = () => {
         element={
           user?.user?.isAdmin ? (
             <CategoryList />
+          ) : (
+            <Navigate to={"/"} replace />
+          )
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          user ? (
+            <Profile />
           ) : (
             <Navigate to={"/"} replace />
           )

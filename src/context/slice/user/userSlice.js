@@ -62,6 +62,32 @@ export const userLogin = createAsyncThunk(
   }
 );
 
+export const userProfile = createAsyncThunk(
+  "users/profile",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const token = getState()?.users.user.token;
+      console.log(token, "token");
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const res = await axios.get(
+        `http://localhost:5000/api/users/profile/${id}`,
+        config
+      );
+      return res.data;
+    } catch (error) {
+      if (!error && !error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 export const userLogout = createAsyncThunk(
   "users/logout",
   async (payload, { rejectWithValue, getState, dispatch }) => {
@@ -93,6 +119,7 @@ const userSlice = createSlice({
     user: userLoggedIn,
     registered: false,
     isLoggedIn: false,
+    userprofile: {}
   },
   reducers: {
     removeAlert(state, action) {
@@ -149,6 +176,19 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
     },
     [userLogout.rejected]: (state, action) => {
+      state.loading = false;
+      state.error.open = true;
+      state.error.message = action?.payload?.message;
+      state.error.type = "error";
+    },
+    [userProfile.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [userProfile.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.userprofile = action.payload.profile;
+    },
+    [userProfile.rejected]: (state, action) => {
       state.loading = false;
       state.error.open = true;
       state.error.message = action?.payload?.message;
