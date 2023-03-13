@@ -12,6 +12,8 @@ import AllPosts from "../components/posts/AllPosts";
 import SinglePostDetail from "../components/posts/SinglePostDetail";
 import UpdatePost from "../components/posts/UpdatePost";
 import Profile from "../components/users/Profile/Profile";
+import Navbar from "../components/shared/Navbar";
+import MuiNavbar from "../components/shared/MuiNavbar";
 
 const Router = () => {
   const { user } = useSelector((store) => store.users);
@@ -19,15 +21,39 @@ const Router = () => {
     <Routes>
       <Route
         path="/"
-        element={<HomePage />}
+        element={
+          user ? (
+            <Navbar>
+              <HomePage />
+            </Navbar>
+          ) : (
+            <Navigate to={"/login"} replace />
+          )
+        }
       />
       <Route
         path="/posts"
-        element={user ? <AllPosts /> : <Navigate to={"/login"} replace />}
+        element={
+          user ? (
+            <MuiNavbar>
+              <AllPosts />
+            </MuiNavbar>
+          ) : (
+            <Navigate to={"/login"} replace />
+          )
+        }
       />
       <Route
         path="/posts/:id"
-        element={user ? <SinglePostDetail /> : <Navigate to={"/login"} replace />}
+        element={
+          user ? (
+            <Navbar>
+              <SinglePostDetail />
+            </Navbar>
+          ) : (
+            <Navigate to={"/login"} replace />
+          )
+        }
       />
       <Route
         path="/login"
@@ -39,17 +65,35 @@ const Router = () => {
       />
       <Route
         path="/create-post"
-        element={user ? <CreatePost /> : <Navigate to={"/"} replace />}
+        element={
+          user ? (
+            <Navbar>
+              <CreatePost />
+            </Navbar>
+          ) : (
+            <Navigate to={"/"} replace />
+          )
+        }
       />
       <Route
         path="/edit-post/:id"
-        element={user ? <UpdatePost /> : <Navigate to={"/"} replace />}
+        element={
+          user ? (
+            <Navbar>
+              <UpdatePost />
+            </Navbar>
+          ) : (
+            <Navigate to={"/"} replace />
+          )
+        }
       />
       <Route
         path="/add-category"
         element={
           user?.user?.isAdmin ? (
-            <AddCategory />
+            <Navbar>
+              <AddCategory />
+            </Navbar>
           ) : (
             <Navigate to={"/"} replace />
           )
@@ -59,7 +103,9 @@ const Router = () => {
         path="/edit-category/:id"
         element={
           user?.user?.isAdmin ? (
-            <UpdateCategory />
+            <Navbar>
+              <UpdateCategory />
+            </Navbar>
           ) : (
             <Navigate to={"/"} replace />
           )
@@ -69,7 +115,9 @@ const Router = () => {
         path="/category-list"
         element={
           user?.user?.isAdmin ? (
-            <CategoryList />
+            <Navbar>
+              <CategoryList />
+            </Navbar>
           ) : (
             <Navigate to={"/"} replace />
           )
@@ -79,7 +127,9 @@ const Router = () => {
         path="/profile"
         element={
           user ? (
-            <Profile />
+            <Navbar>
+              <Profile />
+            </Navbar>
           ) : (
             <Navigate to={"/"} replace />
           )
