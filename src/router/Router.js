@@ -35,9 +35,9 @@ const Router = () => {
         path="/posts"
         element={
           user ? (
-            <MuiNavbar>
+            <Navbar>
               <AllPosts />
-            </MuiNavbar>
+            </Navbar>
           ) : (
             <Navigate to={"/login"} replace />
           )

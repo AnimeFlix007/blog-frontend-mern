@@ -5,6 +5,7 @@ import { getAllCategories } from "../../context/slice/category/CategorySlice";
 import { FetchAllPosts } from "../../context/slice/post/postSlice";
 import Loader from "../shared/Loader";
 import SinglePost from "./SinglePost";
+import Post from "./Post";
 
 const AllPosts = () => {
   const [category, setcategory] = useState("");
@@ -49,9 +50,17 @@ const AllPosts = () => {
         )}
       </div>
       <div className="postHeader">Latest Posts</div>
-      <div className="posts">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(30%, 1fr))",
+          width: "100%",
+          margin: "0 auto",
+          gridGap: ".85rem"
+        }}
+      >
         {posts.map((post) => {
-          return <SinglePost key={post._id} post={post} />;
+          return <Post key={post._id} post={post} />;
         })}
       </div>
     </section>
